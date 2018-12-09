@@ -1,0 +1,31 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package challange.pkg2.cards.game;
+
+import javax.swing.JLabel;
+
+/**
+ *
+ * @author MHDSA
+ */
+public class Card {
+
+
+    public static enum type{spades,diamonds,clubs,hearts};
+    public int value;
+    public type shape;
+    public JLabel pic;
+    public String cardPath;
+    boolean isFliped;
+    int x,y;
+    Card()
+    {
+        isFliped=false;
+    }
+
+    
+    
+}
