@@ -1,0 +1,242 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package challange.pkg2.cards.game;
+
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+/**
+ *
+ * @author MHDSA
+ */
+public class Game extends JFrame implements MouseMotionListener ,Runnable{
+
+    ArrayList<Card> Cards=new ArrayList<Card>(52);
+    String directory="C:\\Users\\MHDSA\\Desktop\\MIU\\FALL 2018\\OOP\\Challenge\\Challange 2 Cards game\\Cards";
+    ArrayList<Card>gameCards=new ArrayList<Card>(21);
+    ArrayList<Card>arrCard1=new ArrayList<Card>(7);
+     ArrayList<Card>arrCard2=new ArrayList<Card>(7);
+      ArrayList<Card>arrCard3=new ArrayList<Card>(7);
+    JButton b1,b2,b3;
+    JLabel ask;
+   
+    
+    Game()
+    {
+        ask=new JLabel("In which group is the card that you chose");
+        ask.setBounds(50, 50, 100, 30);
+        
+        b1=new JButton("group 1");
+        b2=new JButton("group 2");
+        b3=new JButton("group 3");
+        
+        setTitle("Cards trick");
+        setLayout(null);
+        setSize(1300, 700);
+        
+        
+        
+        
+        for(int i=1;i<=13;i++)
+        {
+            for(int j=0;j<4;j++)
+            {
+                Card p=new Card();
+                p.value=i;
+                if(j==0)
+                    p.shape=Card.type.hearts;
+                else if(j==1)
+                    p.shape=Card.type.clubs;
+                else if(j==2)
+                    p.shape=Card.type.diamonds;
+                else
+                    p.shape=Card.type.spades;
+                
+                p.cardPath=directory+"\\"+i+"_of_"+p.shape+".png";
+                //System.out.println(p.cardPath);
+                JLabel l=new JLabel();
+                l.setIcon(new ImageIcon(new ImageIcon(p.cardPath).getImage().getScaledInstance(150, 230, Image.SCALE_DEFAULT)));
+                p.x=800;
+                p.y=300;
+                l.setBounds(p.x, p.y,  150, 230);
+                p.pic=l;
+                p.pic.addMouseMotionListener(this);
+                Cards.add(p);
+                //add(p.pic);
+                
+                
+            }
+        }
+        
+       
+        
+        int  count=0;
+        int rand=0;
+        ArrayList<Integer> checked=new ArrayList<Integer>();
+        boolean used=false;
+        while(count<21)
+        {
+            rand =randGen(52);
+            System.out.println(rand+" ");
+            used=false;
+            for(int i:checked)
+            {
+                if(rand==i)
+                {
+                    used =true;
+                }
+            }
+            if(!used)
+            {
+               gameCards.add(Cards.get(rand));              
+               checked.add(rand);
+               add(gameCards.get(count).pic);
+               count++;
+        
+            }
+        }
+        
+        
+        
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent e) {
+      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           for (Card p:Cards)
+        {
+        if (p.pic.equals(e.getSource()))
+        {
+            //JOptionPane.showMessageDialog(null, "Label 0");
+           // int i=Cards.indexOf(e.getSource());
+       // remove(p.pic);
+        //add(p.pic);
+        
+            p.pic.setBounds(e.getXOnScreen()-50,e.getYOnScreen()-150, 150, 230);
+            
+          //  p.pic.repaint();    
+           // XCor.setText(""+p.Value);
+            
+        }
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    int randGen(int x)
+    {
+        Random rand=new Random();
+        return rand.nextInt(x);
+    }
+      
+    
+    
+    public void run()
+    {
+        setVisible(true);
+        sort(gameCards);
+    }
+    
+    
+    
+    void sort(ArrayList<Card> x)
+    {
+        
+        //setVisible(true);
+        int ycor=100;
+        int xcor[]=new int [3];
+        xcor[0]=100;
+        xcor[1]=300;
+        xcor[2]=500;
+        
+        //int curx,cury;
+        
+        
+        int counter=0;
+        for(Card i:x)
+            
+        {
+           remove(i.pic);
+            add(i.pic);
+            System.out.println("sorting "+counter);
+          //  curx=i.x;
+           // cury=i.y;
+            //i.pic.setBounds(xcor[counter], ycor,150, 260);
+            while(i.x!=xcor[counter]||i.y!=ycor)
+            {
+                i.pic.setBounds(i.x, i.y,150,230);
+                
+                if(i.x>xcor[counter]+10)
+                {
+                    i.x-=5;
+                }
+                else if(i.x<xcor[counter]-10)
+                {
+                    i.x+=5;
+                }
+                else
+                {
+                    i.x=xcor[counter];
+                }
+                
+                if(i.y>ycor+10)
+                {
+                    i.y-=5;
+                }
+                else if(i.y<ycor-10)
+                {
+                    i.y+=5;
+                }
+                else
+                {
+                    i.y=ycor;
+                }
+                
+                try {
+                Thread.sleep(5);
+                } catch (InterruptedException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+            }
+            
+            switch(counter)
+            {
+                case 0:
+                    arrCard1.add(i);
+                    break;
+                case 1:
+                    arrCard2.add(i);
+                    break;
+                case 2:
+                    arrCard3.add(i);
+                    break;
+                    
+            }
+            if(counter==2)
+                ycor+=40;
+            counter=(counter+1)%3;
+            
+            
+            //counter++;
+        }
+        
+    }
+    
+}
+
