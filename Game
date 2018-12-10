@@ -6,7 +6,11 @@
 package challange.pkg2.cards.game;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,7 +25,7 @@ import javax.swing.JLabel;
  *
  * @author MHDSA
  */
-public class Game extends JFrame implements MouseMotionListener ,Runnable{
+public class Game extends JFrame implements MouseMotionListener ,MouseListener,Runnable{
 
     ArrayList<Card> Cards=new ArrayList<Card>(52);
     String directory="C:\\Users\\MHDSA\\Desktop\\MIU\\FALL 2018\\OOP\\Challenge\\Challange 2 Cards game\\Cards";
@@ -31,16 +35,29 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
       ArrayList<Card>arrCard3=new ArrayList<Card>(7);
     JButton b1,b2,b3;
     JLabel ask;
+    int noOfSorts;
    
     
     Game()
     {
+        setVisible(true);
+        noOfSorts=0;
         ask=new JLabel("In which group is the card that you chose");
         ask.setBounds(50, 50, 100, 30);
-        
+        add(ask);
         b1=new JButton("group 1");
         b2=new JButton("group 2");
         b3=new JButton("group 3");
+        
+        
+         
+        b1.addMouseListener(this);
+        b2.addMouseListener(this);
+        b3.addMouseListener(this);
+        
+        b1.setBounds(120, 75, 70,30);
+        b2.setBounds(320, 75, 70, 30);
+        b3.setBounds(520, 75, 70, 30);
         
         setTitle("Cards trick");
         setLayout(null);
@@ -74,7 +91,7 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
                 p.pic=l;
                 p.pic.addMouseMotionListener(this);
                 Cards.add(p);
-                //add(p.pic);
+               // add(p.pic);
                 
                 
             }
@@ -91,6 +108,7 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
             rand =randGen(52);
             System.out.println(rand+" ");
             used=false;
+
             for(int i:checked)
             {
                 if(rand==i)
@@ -103,14 +121,37 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
                gameCards.add(Cards.get(rand));              
                checked.add(rand);
                add(gameCards.get(count).pic);
+                
                count++;
         
             }
         }
+        resetpos(gameCards);
         
-        
-        
+        sort(gameCards);
     }
+   /* private class buttonWatcher implements ActionListener{
+
+        @Override
+          public void actionPerformed(ActionEvent e) {
+        Object pressed=e.getSource();
+        noOfSorts++;
+        if(pressed.equals(b1))
+        {
+        concat(b2,b1,b3);
+        }
+        else if(pressed.equals(b2))
+        {
+        concat(b1,b2,b3);
+        }
+        else if (pressed.equals(b3))
+        {
+        concat(b1,b3,b2);
+        }
+        resetpos(gameCards);
+        }
+        
+    }*/
     
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -126,17 +167,16 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
         
             p.pic.setBounds(e.getXOnScreen()-50,e.getYOnScreen()-150, 150, 230);
             
-          //  p.pic.repaint();    
+          //
+         p.pic.repaint();    
            // XCor.setText(""+p.Value);
             
         }
         }
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
+    
     
     int randGen(int x)
     {
@@ -144,12 +184,57 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
         return rand.nextInt(x);
     }
       
+    void concat(ArrayList<Card> x,ArrayList<Card> y,ArrayList<Card> z)
+    {
+        gameCards.clear();
+        for(Card i:x)
+        {
+            i.pic.setBounds(800, 500, 150, 230);
+            gameCards.add(i);
+        }
+        for(Card i:y)
+        {
+             i.pic.setBounds(800, 500, 150, 230);
+
+            gameCards.add(i);
+        }
+        for(Card i:z)
+        {
+            i.pic.setBounds(800, 500, 150, 230);
+
+            gameCards.add(i);
+        }
+        
+    }
+    
+    void resetpos(ArrayList<Card> a)
+    {
+       // for(Card i:a)
+       // {
+           // remove(i.pic);
+        //}
+        
+        for(Card i:a)
+        {
+          //  remove(i.pic);
+             //i.pic.setVisible(false);
+                i.x=800;
+                i.y=300;
+                i.pic.setBounds(i.x, i.y,  150, 230); 
+                
+                //add(i.pic);
+        }
+    }
     
     
     public void run()
     {
-        setVisible(true);
-        sort(gameCards);
+        //setVisible(true);
+       // sort(gameCards);
+        
+       // sort(gameCards);
+        //System.out.println("sort 2");
+        //sort(gameCards);
     }
     
     
@@ -157,6 +242,9 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
     void sort(ArrayList<Card> x)
     {
         
+        arrCard1.clear();
+        arrCard2.clear();
+        arrCard3.clear();
         //setVisible(true);
         int ycor=100;
         int xcor[]=new int [3];
@@ -168,11 +256,16 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
         
         
         int counter=0;
+        
+        resetpos(x);
+        
         for(Card i:x)
-            
-        {
-           remove(i.pic);
-            add(i.pic);
+   {
+       i.pic.setVisible(true);
+        //   remove(i.pic);
+            i.pic.setBounds(i.x, i.y,150, 230);
+          add(i.pic);
+          i.pic.setVisible(true);
             System.out.println("sorting "+counter);
           //  curx=i.x;
            // cury=i.y;
@@ -208,7 +301,7 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
                 }
                 
                 try {
-                Thread.sleep(5);
+                Thread.sleep(1);
                 } catch (InterruptedException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -235,8 +328,76 @@ public class Game extends JFrame implements MouseMotionListener ,Runnable{
             
             //counter++;
         }
+        ask.setVisible(true);
+        add(ask);
+            add(b1);
+            add(b2);
+            add(b3);
+         //   resetpos(x);
         
     }
+
+
+    
+
+   
+
+   
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            
+            Object pressed=e.getSource();
+            noOfSorts++;
+            if(pressed.equals(b1))
+            {
+                System.out.println("challange.pkg2.cards.game.Game.mouseClicked()");
+                concat(arrCard2,arrCard1,arrCard3);
+            }
+            else if(pressed.equals(b2))
+            {
+                concat(arrCard1,arrCard2,arrCard3);
+            }
+            else if (pressed.equals(b3))
+            {
+                concat(arrCard1,arrCard3,arrCard2);
+            }
+            resetpos(gameCards);
+           sort(gameCards);
+        if(noOfSorts==3)
+        {
+            gameCards.get(10).pic.setBounds(10,500, 150, 230);
+        }
+            
+        }
+         @Override
+    public void mousePressed(MouseEvent e) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+       
+        
+    
     
 }
 
